@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import _ from "lodash";
 
 const papa = require("papaparse");
 
@@ -7,8 +8,46 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            file : ""
+            fileValidity: true
         }
+    }
+
+    onFileUploadHandler = (e) => {
+        let file = e.target.files[0];
+        this.validateFile(file);
+    }
+
+    validateFile(file) {
+
+        if (file.type === "text/csv") {
+            let that = this;
+            papa.parse(file, {
+                worker: true,
+                step: function(row, parser) {
+                    let expectedFirstRow = ["First Name", "Last Name", "Email", "Sex"];
+                    if (_.isEqual(expectedFirstRow, row.data)) {
+                        that.parseCSV(file);
+                    } else {
+                        that.setState({ fileValidity: false }, () => {
+                            that.renderFileTypeError()
+                        });
+                    }
+                    parser.abort();
+                }
+            });
+        } else {
+            this.setState({ fileValidity: false }, () => {
+                this.renderFileTypeError()
+            });
+        }
+
+    }
+
+    renderFileTypeError() {
+        let statusContainer = document.getElementById("status-container");
+        let errorMessage = document.createElement("p");
+        errorMessage.innerHTML = "File must be in the CSV format and follow the correct template with these header rows: 'First Name', 'Last Name', 'Email', 'Sex'.";
+        statusContainer.appendChild(errorMessage);
     }
 
     parseCSV(file) {
@@ -16,7 +55,7 @@ class App extends Component {
         papa.parse(file, {
             worker: true,
             step: function(row) {
-                if (row.data.indexOf("First Name") !== 0) {
+                if (row.data[0] !== "First Name") {
                     let requestBody = {};
                     requestBody["first_name"] = row.data[0];
                     requestBody["last_name"] = row.data[1];
@@ -27,15 +66,8 @@ class App extends Component {
                     let formattedRequestBody = JSON.stringify(requestBody);
                     that.createRosterContact(formattedRequestBody);
                 }
-            },
-            complete: function() {
-                console.log("parsing complete");
             }
         });
-    }
-
-    onChangeHandler = (e) => {
-        this.parseCSV(e.target.files[0]);
     }
 
     createRosterContact(bodyParams) {
@@ -54,7 +86,8 @@ class App extends Component {
     render() {
         return (
             <div>
-                <input type="file" name="file" accept=".csv" onChange={this.onChangeHandler}/>
+                <div id="status-container"></div>
+                <input type="file" name="file" accept=".csv" onChange={this.onFileUploadHandler}/>
                 <p>{this.state.apiResponse}</p>
             </div>
         );
