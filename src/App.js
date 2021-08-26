@@ -8,7 +8,9 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fileValidity: true
+            apiResponse: "",
+            fileValidity: true,
+            contactCount: 0
         }
     }
 
@@ -29,7 +31,7 @@ class App extends Component {
                         that.parseCSV(file);
                     } else {
                         that.setState({ fileValidity: false }, () => {
-                            that.renderFileTypeError()
+                            that.renderFileTypeError();
                         });
                     }
                     parser.abort();
@@ -37,17 +39,30 @@ class App extends Component {
             });
         } else {
             this.setState({ fileValidity: false }, () => {
-                this.renderFileTypeError()
+                this.renderFileTypeError();
             });
         }
 
     }
 
     renderFileTypeError() {
-        let statusContainer = document.getElementById("status-container");
+        let mainContainer = document.getElementById("main");
+        let errorContainer = document.createElement("div");
+        errorContainer.setAttribute("id", "error-container");
         let errorMessage = document.createElement("p");
-        errorMessage.innerHTML = "File must be in the CSV format and follow the correct template with these header rows: 'First Name', 'Last Name', 'Email', 'Sex'.";
-        statusContainer.appendChild(errorMessage);
+        errorMessage.innerHTML = "Error: File must be in the CSV format and follow the correct template with these header rows: 'First Name', 'Last Name', 'Email', 'Sex'.";
+        mainContainer.appendChild(errorContainer);
+        errorContainer.appendChild(errorMessage);
+    }
+
+    renderContactCounter() {
+        let mainContainer = document.getElementById("main");
+        let counterContainer = document.createElement("div");
+        counterContainer.setAttribute("id", "counter-container");
+        let counterMessage = document.createElement("p");
+        counterMessage.innerHTML = `Success: ${this.state.contactCount} contacts created in OnCall`;
+        mainContainer.appendChild(counterContainer);
+        counterContainer.appendChild(counterMessage);
     }
 
     parseCSV(file) {
@@ -78,16 +93,25 @@ class App extends Component {
             },
             body: bodyParams
         })
-        .then(res => res.text())
-        .then(res => this.setState({ apiResponse: res }))
+        .then(res => {
+            if (res.status === 201) {
+                this.setState({
+                    contactCount: this.state.contactCount + 1
+                }, () => {
+                    this.renderContactCounter();
+                });
+            }
+        })
         .catch(err => console.log(err));
     }
 
     render() {
         return (
             <div>
-                <div id="status-container"></div>
-                <input type="file" name="file" accept=".csv" onChange={this.onFileUploadHandler}/>
+                <div id="main">
+                    <h1>Bulk Roster Contact Uploader</h1>
+                    <input id="file-upload-input" type="file" name="file" accept=".csv" onChange={this.onFileUploadHandler}/>
+                </div>
                 <p>{this.state.apiResponse}</p>
             </div>
         );
