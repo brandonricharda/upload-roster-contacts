@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/upload-roster-contacts/static/css/main.7803ecf8.chunk.css",
+    "main.js": "/upload-roster-contacts/static/js/main.a8e2746b.chunk.js",
+    "main.js.map": "/upload-roster-contacts/static/js/main.a8e2746b.chunk.js.map",
+    "runtime-main.js": "/upload-roster-contacts/static/js/runtime-main.b97f1e42.js",
+    "runtime-main.js.map": "/upload-roster-contacts/static/js/runtime-main.b97f1e42.js.map",
+    "static/js/2.7bd8ce69.chunk.js": "/upload-roster-contacts/static/js/2.7bd8ce69.chunk.js",
+    "static/js/2.7bd8ce69.chunk.js.map": "/upload-roster-contacts/static/js/2.7bd8ce69.chunk.js.map",
+    "static/js/3.e1aef031.chunk.js": "/upload-roster-contacts/static/js/3.e1aef031.chunk.js",
+    "static/js/3.e1aef031.chunk.js.map": "/upload-roster-contacts/static/js/3.e1aef031.chunk.js.map",
+    "index.html": "/upload-roster-contacts/index.html",
+    "static/css/main.7803ecf8.chunk.css.map": "/upload-roster-contacts/static/css/main.7803ecf8.chunk.css.map",
+    "static/js/2.7bd8ce69.chunk.js.LICENSE.txt": "/upload-roster-contacts/static/js/2.7bd8ce69.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/upload-roster-contacts/static/media/Cabin-VariableFont_wdth,wght.68985814.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b97f1e42.js",
+    "static/js/2.7bd8ce69.chunk.js",
+    "static/css/main.7803ecf8.chunk.css",
+    "static/js/main.a8e2746b.chunk.js"
+  ]
+}
