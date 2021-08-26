@@ -65,6 +65,14 @@ class App extends Component {
         counterContainer.appendChild(counterMessage);
     }
 
+    clearMessages() {
+        let mainContainer = document.getElementById("main");
+        let errorContainer = document.getElementById("error-container");
+        let counterContainer = document.getElementById("counter-container");
+        if (errorContainer !== null) { mainContainer.removeChild(errorContainer) }
+        if (counterContainer !== null) { mainContainer.removeChild(counterContainer) }
+    }
+
     parseCSV(file) {
         let that = this;
         papa.parse(file, {
@@ -94,6 +102,7 @@ class App extends Component {
             body: bodyParams
         })
         .then(res => {
+            this.clearMessages();
             if (res.status === 201) {
                 this.setState({
                     contactCount: this.state.contactCount + 1
